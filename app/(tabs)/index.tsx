@@ -1,70 +1,109 @@
-import { Image, StyleSheet, Platform } from 'react-native';
+import {
+  View,
+  Text,
+  SafeAreaView,
+  Image,
+  TextInput,
+  ScrollView,
+} from "react-native";
+import React, { useEffect, useState } from "react";
+import {
+  AdjustmentsHorizontalIcon,
+  ChevronDownIcon,
+  MagnifyingGlassIcon,
+  UserIcon,
+} from "react-native-heroicons/outline";
+import Categories from "@/components/Categories";
+import FeaturesRow from "@/components/FeaturesRow";
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+const FEATURED_CATEGORIES = [
+  {
+    id: "1",
+    title: "Featured",
+    description: "Paid placements from our partners",
+  },
+  {
+    id: "2",
+    title: "Tasty Discounts",
+    description: "Everyday discounts on your favourite meals",
+  },
+  {
+    id: "3",
+    title: "Offers Near You",
+    description: "Why cook when you can order in?",
+  },
+];
 
-export default function HomeScreen() {
+const HomeScreen = () => {
+  interface FeaturedCategory {
+    id: string;
+    title: string;
+    description: string;
+  }
+
+  const [featuredCategories, setFeaturedCategories] = useState<
+    FeaturedCategory[]
+  >([]);
+
+  useEffect(() => {
+    setFeaturedCategories(FEATURED_CATEGORIES);
+  }, []);
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
+    <SafeAreaView className="flex-1 pt-8 bg-white">
+      {/* Header */}
+      <View className="flex-row pb-3 items-center mx-4 space-x-2">
         <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
+          source={{
+            uri: "https://d3faj0w6aqatyx.cloudfront.net/uploads/2016/09/05140012/PREFERRED-VERSION-Deliveroo-Logo_Full_CMYK_Teal-2.png",
+          }}
+          className="h-12 w-12 bg-indigo-700 p-4 rounded-full"
         />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({ ios: 'cmd + d', android: 'cmd + m' })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
-  );
-}
+        <View className="flex-1">
+          <Text className="font-bold text-gray-400 text-xs">Deliver Now!</Text>
+          <Text className="font-bold text-xl">
+            Current Location
+            <ChevronDownIcon size={20} color="#00CCBB" />
+          </Text>
+        </View>
+        <UserIcon size={30} color="#00CCBB" />
+      </View>
 
-const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
-  },
-});
+      {/* Search Bar */}
+      <View className="flex-row items-center space-x-2 pb-2 mx-4">
+        <View className="flex-row flex-1 rounded-md space-x-2 bg-gray-200 p-2 items-center">
+          <MagnifyingGlassIcon color="#00CCBB" size={20} />
+          <TextInput
+            placeholder="Restaurants and cuisines"
+            keyboardType="default"
+          />
+        </View>
+        <AdjustmentsHorizontalIcon color="#00CCBB" />
+      </View>
+
+      {/* Body */}
+      <ScrollView
+        className="flex-1 bg-gray-100"
+        contentContainerStyle={{
+          paddingBottom: 20,
+        }}
+      >
+        {/* CategoryComponent */}
+        <Categories />
+
+        {/* FeaturesRows */}
+
+        {featuredCategories.map((category) => (
+          <FeaturesRow
+            key={category.id}
+            id={category.id}
+            title={category.title}
+            description={category.description}
+          />
+        ))}
+      </ScrollView>
+    </SafeAreaView>
+  );
+};
+
+export default HomeScreen;
